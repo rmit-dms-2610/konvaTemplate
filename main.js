@@ -37,3 +37,39 @@ function drawNewCircle(){
 }
 
 circleButton.addEventListener("click", drawNewCircle);
+
+// add drawing feature
+let isPainting = false;
+let lastLine;
+
+function drawMouseDown(){
+    isPainting = true;
+    const pos = stage.getPointerPosition();
+    lastLine = new Konva.Line({
+        stroke: 'red',
+        strokeWidth: 5,
+        lineCap: 'round',
+        lineJoin: 'round',
+        points: [pos.x, pos.y, pos.x, pos.y]
+    });
+    firstLayer.add(lastLine);
+}
+
+stage.on("mousedown", drawMouseDown);
+
+function drawMouseMove(){
+    if(!isPainting) {
+        return;
+    }
+    const pos = stage.getPointerPosition();
+    const newPoints = lastLine.points().concat([pos.x, pos.y]);
+    lastLine.points(newPoints);
+}
+
+stage.on("mousemove", drawMouseMove);
+
+function drawMouseUp(){
+    isPainting = false;
+}
+
+window.addEventListener("mouseup", drawMouseUp);
