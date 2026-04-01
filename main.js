@@ -1,6 +1,8 @@
 // find our elements
 const stageContainer = document.getElementById("stage-container");
 const circleButton = document.getElementById("circle-button");
+const saveButton = document.getElementById("save-button");
+const undoButton = document.getElementById("undo-button");
 // find stage width
 let stageContainerWidth = stageContainer.offsetWidth;
 //console.log(stageContainerWidth);
@@ -11,7 +13,7 @@ let stageContainerHeight = stageContainer.offsetHeight;
 let circleColour = "red";
 
 // create the konva stage
-const stage = new Konva.Stage({
+let stage = new Konva.Stage({
     container: "konva-stage",
     width: stageContainerWidth,
     height: stageContainerHeight
@@ -34,6 +36,7 @@ function drawNewCircle(){
     });
     // add the circle to our first layer
     firstLayer.add(circle);
+    saveUndoState(circle);
 }
 
 circleButton.addEventListener("click", drawNewCircle);
@@ -77,7 +80,7 @@ stage.on("mousedown", drawMouseDown);
 
 // user moves their mouse
 function drawMouseMove(){
-    console.log(Date.now());
+    //console.log(Date.now());
     // don't run if not drawing
     if(isDrawing === false){
         return;
@@ -86,14 +89,45 @@ function drawMouseMove(){
     const pos = stage.getPointerPosition();
     let newPoints = lastLine.points().concat([pos.x, pos.y]);
     lastLine.points(newPoints);
+
 }
 // add function to mousemove event
 stage.on("mousemove", drawMouseMove);
 
 // user releases mouse button
 function drawMouseUp(){
+    if(isDrawing){
+        saveUndoState(lastLine);
+    }
     isDrawing = false;
 }
 // add function to mouseup event
 //stage.on("mouseup", drawMouseUp);
 window.addEventListener("mouseup", drawMouseUp);
+
+
+// save
+function saveFile(){
+    let currentImg = stage.toDataURL();
+    console.log(currentImg)
+    let download = document.createElement("a");
+    download.href = currentImg;
+    download.download = "savedImage.png";
+    download.click();
+    download.remove();
+}
+saveButton.addEventListener("click", saveFile);
+
+let lastShape;
+
+function saveUndoState(shape){
+    lastShape = shape;
+}
+
+function restorePrevState(){
+    if (lastShape === null){
+        return;
+    }
+    lastShape.destroy();
+}
+undoButton.addEventListener("click", restorePrevState);
