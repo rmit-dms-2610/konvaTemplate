@@ -113,8 +113,8 @@ function saveFile(){
     let download = document.createElement("a");
     download.href = currentImg;
     download.download = "savedImage.png";
-    download.click();
-    download.remove();
+    // download.click();
+    // download.remove();
 }
 saveButton.addEventListener("click", saveFile);
 
