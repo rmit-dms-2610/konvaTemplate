@@ -1,6 +1,7 @@
 // find our elements
 const stageContainer = document.getElementById("stage-container");
 const circleButton = document.getElementById("circle-button");
+const imgUploader = document.getElementById("img-uploader");
 // find stage width
 let stageContainerWidth = stageContainer.offsetWidth;
 //console.log(stageContainerWidth);
@@ -9,6 +10,8 @@ let stageContainerHeight = stageContainer.offsetHeight;
 //console.log(stageContainerHeight);
 // set default circle colour
 let circleColour = "red";
+// hold last uploaded image
+let lastUploadedImg = null;
 
 // create the konva stage
 const stage = new Konva.Stage({
@@ -77,7 +80,7 @@ stage.on("mousedown", drawMouseDown);
 
 // user moves their mouse
 function drawMouseMove(){
-    console.log(Date.now());
+    //console.log(Date.now());
     // don't run if not drawing
     if(isDrawing === false){
         return;
@@ -97,3 +100,31 @@ function drawMouseUp(){
 // add function to mouseup event
 //stage.on("mouseup", drawMouseUp);
 window.addEventListener("mouseup", drawMouseUp);
+
+
+/// file upload
+
+// save image to var when uploaded
+function storeImage(e){
+    let uploadedImg = e.target.files[0];
+    lastUploadedImg = URL.createObjectURL(uploadedImg);
+    createCanvasImage(lastUploadedImg);
+}
+imgUploader.addEventListener("input", storeImage);
+
+// create image on canvas
+function createCanvasImage(url){
+    // create html image object
+    const imgObject = new Image();
+    imgObject.onload = () => {
+        const konvaImage = new Konva.Image({
+            x: (stage.width() / 2) - (imgObject.width / 2),
+            y: (stage.height() / 2) - (imgObject.height / 2),
+            image: imgObject,
+            width: imgObject.width,
+            height: imgObject.height
+        });
+        firstLayer.add(konvaImage);
+    }
+    imgObject.src = url;
+}
