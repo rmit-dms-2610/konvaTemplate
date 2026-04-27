@@ -8,6 +8,9 @@ let stageContainerWidth = stageContainer.offsetWidth;
 // find stage height
 let stageContainerHeight = stageContainer.offsetHeight;
 //console.log(stageContainerHeight);
+let sceneWidth = 900;
+let sceneHeight = 1600;
+let scale = stageContainerHeight / sceneHeight;
 // set default circle colour
 let circleColour = "red";
 // save last uploaded image
@@ -19,6 +22,17 @@ const stage = new Konva.Stage({
     width: stageContainerWidth,
     height: stageContainerHeight
 });
+
+// resize
+function resizeHandler(){
+    stageContainerWidth = stageContainer.offsetWidth;
+    stageContainerHeight = stageContainer.offsetHeight;
+    stage.width(sceneWidth * scale);
+    stage.height(sceneHeight * scale);
+    stage.scale({ x: scale, y: scale});
+}
+resizeHandler();
+window.addEventListener("resize", resizeHandler);
 
 // create our layer
 const firstLayer = new Konva.Layer();
@@ -71,7 +85,7 @@ function drawMouseDown(){
         strokeWidth: 5,
         lineCap: "round",
         lineJoin: "round",
-        points: [pos.x, pos.y, pos.x, pos.y]
+        points: [pos.x / scale, pos.y / scale, pos.x / scale, pos.y / scale]
     });
     firstLayer.add(lastLine);
 }
@@ -87,7 +101,7 @@ function drawMouseMove(){
     }
     // if isDrawing is true
     const pos = stage.getPointerPosition();
-    let newPoints = lastLine.points().concat([pos.x, pos.y]);
+    let newPoints = lastLine.points().concat([pos.x / scale, pos.y / scale]);
     lastLine.points(newPoints);
 }
 // add function to mousemove event
