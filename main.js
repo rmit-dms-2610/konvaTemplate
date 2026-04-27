@@ -9,7 +9,7 @@ let stageContainerWidth = stageContainer.offsetWidth;
 let stageContainerHeight = stageContainer.offsetHeight;
 //console.log(stageContainerHeight);
 // set default circle colour
-let circleColour = "blue";
+let circleColour = "yellow";
 // save last uploaded image
 let lastImageUploaded = null;
 
