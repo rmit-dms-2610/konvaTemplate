@@ -20,9 +20,26 @@ const stage = new Konva.Stage({
     height: stageContainerHeight
 });
 
+// handle when users change the size of the window
+function resizeHandler(){
+    // update our stage size when window resized
+    stage.width(stageContainer.offsetWidth);
+    stage.height(stageContainer.offsetHeight);
+}
+// attach to resize event
+window.addEventListener("resize", resizeHandler);
+
 // create our layer
 const firstLayer = new Konva.Layer();
 
+let isPortrait = window.matchMedia("(orientation: portrait)");
+
+console.log(isPortrait);
+
+//
+if(isPortrait.matches){
+    // if in portrait do some code
+}
 
 // add the layer to our stage
 stage.add(firstLayer);
