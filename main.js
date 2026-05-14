@@ -112,7 +112,10 @@ stage.on("mousemove", drawMouseMove);
 
 // user releases mouse button
 function drawMouseUp(){
-    isDrawing = false;
+    if(isDrawing){
+        isDrawing = false;
+    }
+
 }
 // add function to mouseup event
 //stage.on("mouseup", drawMouseUp);
